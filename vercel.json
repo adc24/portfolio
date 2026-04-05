@@ -1,5 +1,7 @@
 {
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
 }
