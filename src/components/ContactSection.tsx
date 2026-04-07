@@ -6,7 +6,6 @@ export function ContactSection() {
   const ref = useScrollReveal();
   const form = useRef<HTMLFormElement>(null);
   
-  // Added state to handle input changes
   const [formData, setFormData] = useState({
     user_name: "",
     user_email: "",
@@ -17,6 +16,7 @@ export function ContactSection() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    // This functional update ensures smooth typing even during animations
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -25,7 +25,6 @@ export function ContactSection() {
 
     if (!form.current) return;
 
-    // Use environment variables for EmailJS
     emailjs
       .sendForm(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -36,18 +35,23 @@ export function ContactSection() {
       .then(
         () => {
           alert("Message sent successfully ✅");
-          setFormData({ user_name: "", user_email: "", message: "" }); // Reset form
+          setFormData({ user_name: "", user_email: "", message: "" });
         },
         (error: any) => {
           console.error("ERROR:", error);
-          alert("Failed to send ❌. Check your EmailJS credentials.");
+          alert("Failed to send ❌. Check Vercel Environment Variables.");
         }
       );
   };
 
   return (
     <section id="contact" className="py-24 px-6 bg-card/30 relative z-10">
-      <div ref={ref} className="max-w-lg mx-auto transition-opacity duration-700">
+      {/* Removed hardcoded opacity-0 to prevent "stuck" invisible states */}
+      <div 
+        ref={ref} 
+        className="max-w-lg mx-auto will-change-transform"
+        style={{ opacity: 0, transition: 'opacity 0.6s ease-out' }}
+      >
         <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2 text-center">
           Get In Touch
         </h2>
@@ -57,7 +61,7 @@ export function ContactSection() {
         </p>
 
         <form ref={form} className="space-y-5" onSubmit={sendEmail}>
-          <div>
+          <div className="relative">
             <input
               type="text"
               name="user_name"
@@ -65,11 +69,12 @@ export function ContactSection() {
               value={formData.user_name}
               onChange={handleChange}
               required
+              autoComplete="name"
               className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all pointer-events-auto"
             />
           </div>
 
-          <div>
+          <div className="relative">
             <input
               type="email"
               name="user_email"
@@ -77,11 +82,12 @@ export function ContactSection() {
               value={formData.user_email}
               onChange={handleChange}
               required
+              autoComplete="email"
               className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all pointer-events-auto"
             />
           </div>
 
-          <div>
+          <div className="relative">
             <textarea
               name="message"
               placeholder="Your Message"
@@ -95,7 +101,7 @@ export function ContactSection() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+            className="w-full py-3 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer active:scale-[0.98]"
           >
             Send Message
           </button>
