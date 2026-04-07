@@ -26,13 +26,11 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [
-      TanStackRouterVite(),
-      viteReact(),
-      tailwindcss(),
-      tsConfigPaths({
-        projects: ["./tsconfig.json"],
-      }),
-    ],
+  TanStackRouterVite(), // This generates the routes
+  viteReact(),          // This handles React
+  tailwindcss(),
+  tsConfigPaths(),
+],
     build: {
       outDir: "dist",
       emptyOutDir: true,
