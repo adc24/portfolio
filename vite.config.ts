@@ -1,7 +1,7 @@
 import path from "path";
 import { defineConfig, loadEnv } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
-// Change this line:
+// Corrected import path for the TanStack Router Vite plugin
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -26,11 +26,12 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [
-  TanStackRouterVite(), // This generates the routes
-  viteReact(),          // This handles React
-  tailwindcss(),
-  tsConfigPaths(),
-],
+      // Order matters: Router plugin should come before React plugin
+      TanStackRouterVite(), 
+      viteReact(),          
+      tailwindcss(),
+      tsConfigPaths(),
+    ],
     build: {
       outDir: "dist",
       emptyOutDir: true,
