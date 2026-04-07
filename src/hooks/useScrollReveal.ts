@@ -7,28 +7,24 @@ export function useScrollReveal() {
     const el = ref.current;
     if (!el) return;
 
+    // Use a unique ID or check a data-attribute to prevent re-running
+    if (el.getAttribute('data-revealed') === 'true') return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Add the animation class
           el.classList.add("animate-fade-up");
-          // Ensure it stays visible after animation
           el.style.opacity = "1";
+          el.setAttribute('data-revealed', 'true');
           observer.unobserve(el);
         }
       },
-      { 
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px' // Trigger slightly before it enters view
-      }
+      { threshold: 0.1 }
     );
 
     observer.observe(el);
-    return () => {
-      if (el) observer.unobserve(el);
-      observer.disconnect();
-    };
-  }, []);
+    return () => observer.disconnect();
+  }, []); // Empty array is key here
 
   return ref;
 }
